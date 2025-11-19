@@ -1,4 +1,4 @@
-import {base_url, openingCrawl} from "../utils/constants.js";
+import {base_url} from "../utils/constants.js";
 import {useEffect, useState} from "react";
 
 const OpeningCrawl = () => {
@@ -12,7 +12,7 @@ const OpeningCrawl = () => {
             .then(data => setOpeningCrawl(data.opening_crawl))
             .catch(() => setOpeningCrawl('Error loading opening crawl'));
         // return () => console.log('Component OpeningCrawl unmounted'); // 4to delaem pri razmontirovanii komponenta
-    }, []) // deps: [] - massiv zavisimosti, esli on pustoy to useEffect srabativaet odin raz posle montirovaniya komponentov
+    }, []) // deps: [] - massiv zavisimosti, esli on pustoy to useEffect srabativaet odin raz posle montirovaniya komponentov(posle pervogo rendera)
 
     if (openingCrawl) {
         return (
