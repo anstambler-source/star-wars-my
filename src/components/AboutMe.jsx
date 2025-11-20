@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {base_url} from "../utils/constants.js";
-import luke1 from '../assets/luke1.jpg'
+import luke1 from '../assets/Luke1.jpg'
 
 const AboutMe = () => {
 
@@ -19,10 +19,10 @@ const AboutMe = () => {
                 mass: data.mass,
                 birth_year: data.birth_year
             }))
-            .catch(() => setAboutMe('Error loading about me'))
-    })
+            .catch(() => setAboutMe('Error loading about me'));
+    }, [])
 
-    if (aboutMeInfo) {
+    if (typeof aboutMeInfo === 'object') {
         return (
             <div className='container'>
                 <div className='row'>
