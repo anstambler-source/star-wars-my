@@ -7,19 +7,32 @@ const AboutMe = () => {
     const [aboutMeInfo, setAboutMe] = useState();
 
     useEffect(() => {
-        fetch(`${base_url}/v1/peoples/1`)
+        const _30days = 1000 * 60 * 60 * 24 * 30;
+        const creationTime = localStorage.getItem('creationTime');
+        const dateNow = Date.now();
+        const infoFromLocalStorage = localStorage.getItem('infoFromLocalStorage');
+        if (infoFromLocalStorage && (dateNow - creationTime) - _30days <= 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setAboutMe(JSON.parse(infoFromLocalStorage));
+        }
+        else { fetch(`${base_url}/v1/peoples/1`)
             .then(res => res.json())
-            .then(data => setAboutMe({
-                name: data.name,
-                gender: data.gender,
-                skin_color: data.skin_color,
-                hair_color: data.hair_color,
-                height: data.height,
-                eye_color: data.eye_color,
-                mass: data.mass,
-                birth_year: data.birth_year
-            }))
-            .catch(() => setAboutMe('Error loading about me'));
+            .then(data => {
+                const info = {
+                    name: data.name,
+                    gender: data.gender,
+                    skin_color: data.skin_color,
+                    hair_color: data.hair_color,
+                    height: data.height,
+                    eye_color: data.eye_color,
+                    mass: data.mass,
+                    birth_year: data.birth_year
+                }
+                setAboutMe(info)
+                localStorage.setItem('infoFromLocalStorage', JSON.stringify(info));
+                localStorage.setItem('creationTime', Date.now())
+            })
+            .catch(() => setAboutMe('Error loading about me'));}
     }, [])
 
     if (typeof aboutMeInfo === 'object') {
