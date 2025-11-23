@@ -1,14 +1,12 @@
-import Hero from "./Hero.jsx";
-import DreamTeam from "./DreamTeam.jsx";
-import OpeningCrawl from "./OpeningCrawl.jsx";
 import Home from "./Home.jsx";
 import Contact from "./Contact.jsx";
-import {navItems} from "../utils/constants.js";
+import {navItems, StarWarsContext} from "../utils/constants.js";
 import AboutMe from "./AboutMe.jsx";
 import StarWars from "./StarWars.jsx";
+import {useContext} from "react";
 
-const Main = ({page}) => {
-
+const Main = () => {
+    const {page} = useContext(StarWarsContext);
 
     switch (page) {
         case navItems[1]:

@@ -44,10 +44,11 @@ const AboutMe = () => {
         )
     } else {
         return (
-            <p className={'far-galaxy'}>
+            <div className={'far-galaxy'}>
                 <span className={'spinner-border sm spinner-border'}></span>
                 <span className={'spinner-grow spinner-grow-sm'}>Loading</span>
-            </p>
+                <p>{aboutMeInfo}</p>
+            </div>
         )
     }
 
