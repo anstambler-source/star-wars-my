@@ -5,14 +5,22 @@ const OpeningCrawl = () => {
 
     const [openingCrawl, setOpeningCrawl] = useState();
 
-    useEffect(() => { // srabotaet posle togo kak komponent budet smontirovan
-        const episode = Math.floor(Math.random() * 6) + 1
-        fetch(`${base_url}/v1/films/${episode}`)
-            .then(res => res.json())
-            .then(data => setOpeningCrawl(data.opening_crawl))
-            .catch(() => setOpeningCrawl('Error loading opening crawl'));
-        // return () => console.log('Component OpeningCrawl unmounted'); // 4to delaem pri razmontirovanii komponenta
-    }, []) // deps: [] - massiv zavisimosti, esli on pustoy to useEffect srabativaet odin raz posle montirovaniya komponentov(posle pervogo rendera)
+    useEffect(() => {
+        const opening_crawl = sessionStorage.getItem("opening_crawl");
+        if (opening_crawl) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setOpeningCrawl(opening_crawl)
+        } else {
+            const episode = Math.floor(Math.random() * 6) + 1
+            fetch(`${base_url}/v1/films/${episode}`)
+                .then(res => res.json())
+                .then(data => {
+                    setOpeningCrawl(data.opening_crawl);
+                    sessionStorage.setItem("opening_crawl", data.opening_crawl);
+                })
+                .catch(() => setOpeningCrawl('Error loading opening crawl'));
+        }
+    }, [])
 
     if (openingCrawl) {
         return (
