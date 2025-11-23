@@ -7,13 +7,14 @@ const AboutMe = () => {
     const [aboutMeInfo, setAboutMe] = useState();
 
     useEffect(() => {
+        const infoLukeFromLocalStorage = localStorage.getItem('infoLukeFromLocalStorage');
         const _30days = 1000 * 60 * 60 * 24 * 30;
-        const creationTime = localStorage.getItem('creationTime');
+        const lukeCreationTime = localStorage.getItem('lukeCreationTime');
         const dateNow = Date.now();
-        const infoFromLocalStorage = localStorage.getItem('infoFromLocalStorage');
-        if (infoFromLocalStorage && (dateNow - creationTime) - _30days <= 0) {
+
+        if (infoLukeFromLocalStorage && dateNow - lukeCreationTime - _30days <= 0) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
-            setAboutMe(JSON.parse(infoFromLocalStorage));
+            setAboutMe(JSON.parse(infoLukeFromLocalStorage));
         }
         else { fetch(`${base_url}/v1/peoples/1`)
             .then(res => res.json())
@@ -29,8 +30,8 @@ const AboutMe = () => {
                     birth_year: data.birth_year
                 }
                 setAboutMe(info)
-                localStorage.setItem('infoFromLocalStorage', JSON.stringify(info));
-                localStorage.setItem('creationTime', Date.now())
+                localStorage.setItem('infoLukeFromLocalStorage', JSON.stringify(info));
+                localStorage.setItem('lukeCreationTime', Date.now())
             })
             .catch(() => setAboutMe('Error loading about me'));}
     }, [])
