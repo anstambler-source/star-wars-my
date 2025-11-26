@@ -1,5 +1,6 @@
 import {base_url} from "../utils/constants.js";
 import {useEffect, useState} from "react";
+import Text from "./ui/Text.jsx";
 
 const OpeningCrawl = () => {
 
@@ -18,19 +19,10 @@ const OpeningCrawl = () => {
         }
     }, [openingCrawl])
 
-    if (openingCrawl) {
-        return (
-            <p className="far-galaxy">{openingCrawl}</p>
-        );
-    } else {
-        return (
-            <p className="far-galaxy">
-                <span className={'spinner-border sm spinner-border'}></span>
-                <span className={'spinner-grow spinner-grow-sm'}>Loading</span>
-            </p>
-        )
-    }
 
+        return (
+            <Text>{openingCrawl || 'Loading'}</Text>
+        );
 
 };
 

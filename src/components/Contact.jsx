@@ -1,3 +1,4 @@
+import '../Contact.css'
 import {useEffect, useState} from "react";
 
 const Contact = () => {
@@ -30,28 +31,26 @@ const Contact = () => {
     }, [contactPlanetInfo])
 
     return (
-        <div className="containerContact">
-            <form action="action_page.php">
 
-                <label htmlFor="fname">First Name</label>
-                <input type="text" id="fname" name="firstname" placeholder="Your name.."/>
+    <form className="container" onSubmit={e => {
+        e.preventDefault();
+    }}>
+        <label>First Name
+            <input type="text" name="firstname" placeholder="Your name.."/>
+        </label>
+        <label>Last Name
+            <input type="text" name="lastname" placeholder="Your last name.."/>
+        </label>
+        <label>Planet
+            <select name="planet">
+                {contactPlanetInfo?.map(planet => <option value={planet} key={planet}>{planet}</option>)}            </select>
+        </label>
 
-                <label htmlFor="lname">Last Name</label>
-                <input type="text" id="lname" name="lastname" placeholder="Your last name.."/>
-
-                <label htmlFor="planet">Planet</label>
-                <select id="planet" name="planet">
-                    {contactPlanetInfo?.map(planet => <option value={planet} key={planet}>{planet}</option>)}
-                </select>
-
-                <label htmlFor="subject">Subject</label>
-                <textarea id="subject" name="subject" placeholder="Write something and may the Force be with you..."
-                          style={{height: "200px"}}></textarea>
-
-                <input type="submit" className={'btn btn-danger mx-1 border-warning'} value="Submit"/>
-
-            </form>
-        </div>
+        <label>Subject
+            <textarea name="subject" placeholder="Write something.."></textarea>
+        </label>
+        <button type="submit">Submit</button>
+    </form>
     )
 }
 
