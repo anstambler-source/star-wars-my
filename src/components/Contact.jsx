@@ -1,29 +1,33 @@
 import {useEffect, useState} from "react";
 
 const Contact = () => {
-    const [contactPlanetInfo, setContactPlanetInfo] = useState([]);
+    const [contactPlanetInfo, setContactPlanetInfo] = useState(() => {
+        if (localStorage.getItem("Contact")) {
+            const planets = JSON.parse(localStorage.getItem('Contact'))
+            const dateNow = Date.now();
+            const _30days = 1000 * 60 * 60 * 24 * 30;
+
+            if (dateNow - planets.timestamp <= _30days) {
+                return planets.payload;
+            }
+        }
+    });
 
     useEffect(() => {
-        const infoPlanetsFromLocalStorage = localStorage.getItem('infoPlanetsFromLocalStorage');
-        const _30days = 1000 * 60 * 60 * 24 * 30;
-        const planetsCreationTime = localStorage.getItem('planetsCreationTime');
-        const dateNow = Date.now();
-
-        if (infoPlanetsFromLocalStorage && dateNow - planetsCreationTime - _30days <= 0) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setContactPlanetInfo(JSON.parse(infoPlanetsFromLocalStorage))
-        }
-        else {fetch('https://sw-info-api.herokuapp.com/v1/planets')
+        if (!contactPlanetInfo) {        
+            fetch('https://sw-info-api.herokuapp.com/v1/planets')
             .then(res => res.json())
             .then(data => {
                 const arrPlanets = data.map(item => item.name)
                 setContactPlanetInfo(arrPlanets)
-                localStorage.setItem('infoPlanetsFromLocalStorage', JSON.stringify(arrPlanets))
-                localStorage.setItem('planetsCreationTime', Date.now())
+                localStorage.setItem('Contact', JSON.stringify({
+                    payload: arrPlanets,
+                    timestamp: Date.now(),
+                }))
             })
             .catch(() => setContactPlanetInfo(['Error loading planets']))
         }
-    }, [])
+    }, [contactPlanetInfo])
 
     return (
         <div className="containerContact">
@@ -37,7 +41,7 @@ const Contact = () => {
 
                 <label htmlFor="planet">Planet</label>
                 <select id="planet" name="planet">
-                    {contactPlanetInfo.map(planet => <option value={planet} key={planet}>{planet}</option>)}
+                    {contactPlanetInfo?.map(planet => <option value={planet} key={planet}>{planet}</option>)}
                 </select>
 
                 <label htmlFor="subject">Subject</label>

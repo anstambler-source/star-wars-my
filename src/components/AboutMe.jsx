@@ -4,19 +4,21 @@ import luke1 from '../assets/Luke1.jpg'
 
 const AboutMe = () => {
 
-    const [aboutMeInfo, setAboutMe] = useState();
+    const [aboutMeInfo, setAboutMe] = useState(() => {
+        if (localStorage.getItem('AboutMe')) {
+            const hero = JSON.parse(localStorage.getItem('AboutMe'))
+            const dateNow = Date.now();
+            const _30days = 1000 * 60 * 60 * 24 * 30;
+
+            if (dateNow - hero.timestamp <= _30days) {
+                return hero.payload
+            }
+        }
+    });
 
     useEffect(() => {
-        const infoLukeFromLocalStorage = localStorage.getItem('infoLukeFromLocalStorage');
-        const _30days = 1000 * 60 * 60 * 24 * 30;
-        const lukeCreationTime = localStorage.getItem('lukeCreationTime');
-        const dateNow = Date.now();
-
-        if (infoLukeFromLocalStorage && dateNow - lukeCreationTime - _30days <= 0) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setAboutMe(JSON.parse(infoLukeFromLocalStorage));
-        }
-        else { fetch(`${base_url}/v1/peoples/1`)
+        if (!aboutMeInfo) {
+            fetch(`${base_url}/v1/peoples/1`)
             .then(res => res.json())
             .then(data => {
                 const info = {
@@ -30,11 +32,14 @@ const AboutMe = () => {
                     birth_year: data.birth_year
                 }
                 setAboutMe(info)
-                localStorage.setItem('infoLukeFromLocalStorage', JSON.stringify(info));
-                localStorage.setItem('lukeCreationTime', Date.now())
+                localStorage.setItem('AboutMe', JSON.stringify({
+                    payload: info,
+                    timestamp: Date.now(),
+                }));
             })
-            .catch(() => setAboutMe('Error loading about me'));}
-    }, [])
+            .catch(() => setAboutMe('Error loading about me'));
+        }
+    }, [aboutMeInfo])
 
     if (typeof aboutMeInfo === 'object') {
         return (
