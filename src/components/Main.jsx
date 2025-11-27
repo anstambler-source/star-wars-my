@@ -6,7 +6,7 @@ import StarWars from "./StarWars.jsx";
 import {useContext} from "react";
 
 const Main = () => {
-    const {page} = useContext(StarWarsContext); // ispolzuem zna4enie 'page' iz kontexta (destrukturiruya ego)
+    const {page} = useContext(StarWarsContext);
 
     switch (page) {
         case navItems[1]:

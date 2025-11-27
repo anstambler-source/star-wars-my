@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {base_url} from "../utils/constants.js";
 import luke1 from '../assets/Luke1.jpg'
+import Text from "./ui/Text.jsx";
 
 const AboutMe = () => {
 
@@ -19,59 +20,41 @@ const AboutMe = () => {
     useEffect(() => {
         if (!aboutMeInfo) {
             fetch(`${base_url}/v1/peoples/1`)
-            .then(res => res.json())
-            .then(data => {
-                const info = {
-                    name: data.name,
-                    gender: data.gender,
-                    skin_color: data.skin_color,
-                    hair_color: data.hair_color,
-                    height: data.height,
-                    eye_color: data.eye_color,
-                    mass: data.mass,
-                    birth_year: data.birth_year
-                }
-                setAboutMe(info)
-                localStorage.setItem('AboutMe', JSON.stringify({
-                    payload: info,
-                    timestamp: Date.now(),
-                }));
-            })
-            .catch(() => setAboutMe('Error loading about me'));
+                .then(res => res.json())
+                .then(data => {
+                    const info = {
+                        'Name': data.name,
+                        'Gender': data.gender,
+                        'Skin color': data.skin_color,
+                        'Hair color': data.hair_color,
+                        'Height': data.height,
+                        'Eye color': data.eye_color,
+                        'Mass': data.mass,
+                        'Birth year': data.birth_year
+                    }
+                    setAboutMe(info)
+                    localStorage.setItem('AboutMe', JSON.stringify({
+                        payload: info,
+                        timestamp: Date.now(),
+                    }));
+                })
+                .catch(() => setAboutMe('Error loading about me'));
         }
     }, [aboutMeInfo])
 
-    if (typeof aboutMeInfo === 'object') {
+    if (typeof aboutMeInfo !== 'object') {
+        return (<Text>Loading...</Text>)}
+
         return (
-            <div className='container'>
-                <div className='row'>
-                    <div className='far-galaxy col-sm-7'>
-                        <p>Name: {aboutMeInfo.name}</p>
-                        <p>Gender: {aboutMeInfo.gender}</p>
-                        <p>Skin color: {aboutMeInfo.skin_color}</p>
-                        <p>Hair color: {aboutMeInfo.hair_color}</p>
-                        <p>Height: {aboutMeInfo.height}</p>
-                        <p>Eye color: {aboutMeInfo.eye_color}</p>
-                        <p>Mass: {aboutMeInfo.mass}</p>
-                        <p>Birth year: {aboutMeInfo.birth_year}</p>
-                    </div>
-                    <div className='col-sm-5'>
-                        <img src={luke1} alt='luke' style={{ width: '300px', height: 'auto', borderRadius: '5%' }}/>
-                    </div>
+            <div className='flex justify-around mt-2'>
+                <div>
+                    {Object.entries(aboutMeInfo).map(value => <Text key={value}>{value[0]}: {value[1]}</Text>)}
+                </div>
+                <div>
+                    <img src={luke1} alt='luke' className='w-3/4 rounded-[5%]'/>
                 </div>
             </div>
         )
-    } else {
-        return (
-            <div className={'far-galaxy'}>
-                <span className={'spinner-border sm spinner-border'}></span>
-                <span className={'spinner-grow spinner-grow-sm'}>Loading</span>
-                <p>{aboutMeInfo}</p>
-            </div>
-        )
-    }
-
-
 }
 
 export default AboutMe;
